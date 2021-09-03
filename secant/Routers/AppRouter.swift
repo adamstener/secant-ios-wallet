@@ -12,6 +12,7 @@ enum AppRouterScreen {
     case appLoading
     case createRestoreWallet
     case home
+    case loadingFailed
 }
 
 class AppRouter: Router {
@@ -50,6 +51,10 @@ class AppRouter: Router {
     @ViewBuilder func loadingScreen() -> some View {
         LoadingScreen(router: self, viewModel: LoadingScreenViewModel(services: self.services))
     }
+    
+    @ViewBuilder func loadingFailedScreen() -> some View {
+        Text("loading failed")
+    }
 }
 
 
@@ -64,6 +69,8 @@ struct AppRouterView: View {
             self.router.createNew()
         case .home:
             self.router.home()
+        case .loadingFailed:
+            self.router.loadingFailedScreen()
         }
     }
     
@@ -75,16 +82,15 @@ struct AppRouterView: View {
 
 extension AppRouter: LoadingScreenRouter {
     func proceedToWelcome() {
-        
+        self.screen = .createRestoreWallet
     }
     
     func proceedToHome() {
         self.screen = .home
     }
     
+    // TODO: handle Errors
     func failWithError() {
-        
+        self.screen = .loadingFailed
     }
-    
-    
 }
