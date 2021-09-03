@@ -20,7 +20,7 @@ class AppRouter: Router {
     @Published var screen: AppRouterScreen = .appLoading
     
     // MARK: - Private vars
-    
+   
     // MARK: - Internal vars
     var services: Services
         
@@ -48,7 +48,7 @@ class AppRouter: Router {
     }
     
     @ViewBuilder func loadingScreen() -> some View {
-        Text("Loading")
+        LoadingScreen(router: self, viewModel: LoadingScreenViewModel(services: self.services))
     }
 }
 
@@ -57,7 +57,7 @@ struct AppRouterView: View {
     @StateObject var router: AppRouter
     
     @ViewBuilder func viewForScreen(_ screen: AppRouterScreen) -> some View {
-        switch self.router.screen {
+        switch screen {
         case .appLoading:
             self.router.loadingScreen()
         case .createRestoreWallet:
@@ -66,16 +66,25 @@ struct AppRouterView: View {
             self.router.home()
         }
     }
+    
     var body: some View {
         viewForScreen(router.screen)
-            .onAppear() {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    if router.services.keyStorage.keysPresent {
-                        router.screen = .home
-                    } else {
-                        router.screen = .createRestoreWallet
-                    }
-                }
-            }
     }
+}
+
+
+extension AppRouter: LoadingScreenRouter {
+    func proceedToWelcome() {
+        
+    }
+    
+    func proceedToHome() {
+        self.screen = .home
+    }
+    
+    func failWithError() {
+        
+    }
+    
+    
 }
