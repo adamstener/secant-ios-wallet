@@ -27,7 +27,7 @@ struct LoadingScreen: View {
                 viewModel.callRouter(router, with: r)
             })
             .onAppear() {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                     viewModel.loadAsync()
                 }
             }
